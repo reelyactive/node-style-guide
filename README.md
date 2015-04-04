@@ -75,14 +75,23 @@ Every JavaScript file should start with the following comment:
       * We believe in an open Internet of Things
       */
 
-The use of a copyright indicates that the code is intellectual property created by reelyActive.  Note that the date range should extend between the year the file was initially created to the year the file was last modified.  This is a simple way to provide a brief historical perspective of the code.  The line _"We believe in an open Internet of Things"_ serves as a reminder of our vision and should inspire the developer to maintain the code in a way befitting of an open project with many collaborators.
+The use of a copyright indicates that the code is intellectual property created by reelyActive.
+
+Note that the date range should extend between the year the file was initially created to the year the file was last modified.  This is a simple way to provide a brief historical perspective of the code.
+
+The line _"We believe in an open Internet of Things"_ serves as a reminder of our vision and should inspire the developer to maintain the code in a way befitting of an open project with many collaborators.
 
 #### Self: what is this exactly?
 
-What is _this_?  In [Mixu's Node Book](http://book.mixu.net/node/ch4.html), the _this_ keyword is considered the #1 gotcha in V8 and JavaScript.  Therefore, in a class constructor and its class methods, we always use a _self_ variable to refer to the class object instance.  A static method can accept an _instance_ parameter in order to work on the specific class object instance.  The example below illustrates our use of the _self_ variable and _instance_ parameter.
+What is _this_?  In [Mixu's Node Book](http://book.mixu.net/node/ch4.html), the _this_ keyword is considered the #1 gotcha in V8 and JavaScript.  Therefore, in a class constructor and its class methods, we always use a _self_ variable to refer to the class object instance.  In other words, the _self_ unamibuously refers to the class instance.
+
+A static method can accept an _instance_ parameter in order to work on a specific class object instance.
+
+The example below illustrates our use of the _self_ variable and _instance_ parameter.  And [this video clip](https://vimeo.com/59037145) represents an amusing meme you can use to recall our motivation for the _self_ variable.
 
 ```javascript
 /**
+ * An example class constructor
  * @constructor
  */
 function SomeClass() {
@@ -97,6 +106,7 @@ function SomeClass() {
 };
 
 /**
+ * An example class method
  */
 SomeClass.prototype.doSomething = function() {
   var self = this;                               // Always on the first line
@@ -106,11 +116,98 @@ SomeClass.prototype.doSomething = function() {
 
 
 /**
+ * An example static method
  * @param {SomeClass} instance The given class object instance.
  */
 function someStaticMethod(instance) {
   instance.app.doSomethingElse();
 };
+```
+
+### RESTful Structure
+
+#### Keep server.js simple
+
+The class constructor is contained in a file named server.js.  A developer should be able to quickly read the file and identify all the supported routes.  Imagine it as a table of contents for the REST API.
+
+Below is an example server.js file.
+
+```javascript
+var express = require('express');
+
+/**
+ * An example RESTful class constructor
+ * @constructor
+ */
+function RESTfulClass() {
+  var self = this;
+
+  self.app = express();
+
+  self.app.use(function(req, res, next) {
+    req.instance = self;                         // Sneak the class object
+    next();                                      //   instance into the req
+  });
+
+  // Each route is in a separate external file
+  self.app.use('/someroute', require('./routes/someroute'));
+  self.app.use('/anotherroute', require('./routes/anotherroute'));
+
+  self.app.listen(80);
+};
+
+module.exports = RESTfulClass;
+```
+
+#### One route per file
+
+Each API route is in a separate external file within a routes subfolder.  A developer should be able to quickly read the file and identify any middleware used, all the routes and subroutes as well as the supported HTTP methods for each.
+
+Each route is an [express router object](http://expressjs.com/api.html#router).
+
+Each method (GET, POST, PUT, DELETE, ...) for a given route will be implemented via a function call.  This allows a developer to quickly navigate to the implementation of any given route.  For clarity, the function name will have a prefix corresponding to the given HTTP method, specifically:
+- GET = retrieve
+- POST = create
+- PUT = replace
+- DELETE = delete
+
+In keeping with the previous example, the file routes/someroute.js would resemble the following:
+
+```javascript
+var express = require('express');
+var router = express.Router();
+
+router.use(function someMiddleware(req, res, next) {
+  next();
+});
+
+router.route('/')                                // Supports GET, POST
+  .get(function(req, res) {
+    retrieveSomething(req, res);
+  })
+  .post(function(req, res) {
+    createSomething(req, res);
+  });
+
+router.route('/:id')                             // Supports GET, PUT, DELETE
+  .get(function(req, res) {
+    retrieveSomethingSpecific(req, res);
+  })
+  .put(function(req, res) {
+    replaceSomethingSpecific(req, res);
+  })
+  .delete(function(req, res) {
+    deleteSomethingSpecific(req, res);
+  });
+
+function retrieveSomething(req, res) { }         // GET = retrieve
+function createSomething(req, res) { }           // POST = create
+
+function retrieveSomethingSpecific(req, res) { } // GET = retrieve
+function replaceSomethingSpecific(req, res) { }  // PUT = replace
+function deleteSomethingSpecific(req, res) { }   // DELETE = delete
+
+module.exports = router;
 ```
 
 
