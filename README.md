@@ -210,5 +210,31 @@ function deleteSomethingSpecific(req, res) { }   // DELETE = delete
 module.exports = router;
 ```
 
+## Development Tools
 
+We use a handful of development tools to ensure that our code is consistent, tested and documented, thereby making everyone's life easier.
+
+### JSHint for Standards Enforcement
+
+See [JSHint](http://jshint.com/).  Place the .jshintrc file included in this repository in the root folder of the project.  To validate a file named server.js run:
+
+    jshint server.js
+
+Give yourself a pat on the back when jshint returns no errors.
+
+### jscs for Code Style Enforcement
+
+See [jscs](http://jscs.info/).  Place the .jscsrc file included in this repository in the root folder of the project.  To validate a file named server.js run:
+
+    jscs server.js
+
+Reward yourself with a beer when jscs returns _No code style errors found_.
+
+### Mocha for Tests
+
+See [Mocha](http://mochajs.org/).
+
+### JSDoc for Documentation
+
+See [JSDoc](http://usejsdoc.org/).
 
