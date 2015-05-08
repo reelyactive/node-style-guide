@@ -232,7 +232,55 @@ Reward yourself with a beer when jscs returns _No code style errors found_.
 
 ### Mocha for Tests
 
-See [Mocha](http://mochajs.org/).
+See [Mocha](http://mochajs.org/).  Create a test folder in the root with two subfolders:
+- functional
+- unit
+
+Unit tests shall have a .test.js file matching the name of the .js file under test.  Functional tests shall have a .test.js file named after the scenario under test.  There shall be one scenario (describe) per file to keep things tidy.
+
+The following is an example of /test/unit/server.test.js which would represent a unit test for the file /lib/server.js:
+
+```javascript
+var assert = require('assert');
+var server = require('../../lib/server.js');  // Module under test
+
+// Inputs for the scenario
+var INPUT_DATA = 'coffee';
+
+// Expected outputs for the scenario
+var EXPECTED_DATA = { coffeeType: 'mocha' };
+
+// Describe the scenario
+describe('server', function() {
+
+  // Set up the scenario (runs once at the start)
+  before(function() {
+    var self = this;
+    self.server = new server();
+  });
+
+  // Reset the scenario (runs before each individual test)
+  beforeEach(function() {
+    var self = this;
+    self.server.clear();
+  });
+
+  // Individual test (synchronous)
+  it('should return an Object when instantiated', function() {
+    var self = this;
+    assert.equal(typeof self.server, 'object');
+  })
+
+  // Individual test (asynchronous)
+  it('should return mocha when I ask for coffee', function(done) {
+    var self = this;
+    self.server.doSomethingAsynchronous(INPUT_DATA, function(data) {
+      assert.deepEqual(EXPECTED_DATA, data);
+      done();
+    });
+  })
+});
+```
 
 ### JSDoc for Documentation
 
