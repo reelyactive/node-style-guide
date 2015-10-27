@@ -18,10 +18,7 @@ Fortunately, we aren't the first to code for Node.js, and there are some good st
 
 #### 80 Characters Per Line
 
-> Limit your lines to 80 characters. Yes, screens have gotten much bigger over the last few years, but your brain has not. UUse lowerCamelCase for variables, properties and function names
-Use UpperCamelCase for class names
-Use UPPERCASE for Constants
-se the additional room for split screen, your editor supports that, right?
+> Limit your lines to 80 characters. Yes, screens have gotten much bigger over the last few years, but your brain has not. Use the additional room for split screen, your editor supports that, right?
 
 #### Case
 
