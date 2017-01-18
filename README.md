@@ -80,7 +80,7 @@ The line _"We believe in an open Internet of Things"_ serves as a reminder of ou
 
 #### Self: what is this exactly?
 
-What is _this_?  In [Mixu's Node Book](http://book.mixu.net/node/ch4.html), the _this_ keyword is considered the #1 gotcha in V8 and JavaScript.  Therefore, in a class constructor and its class methods, we always use a _self_ variable to refer to the class object instance.  In other words, the _self_ unamibuously refers to the class instance.
+What is _this_?  In [Mixu's Node Book](http://book.mixu.net/node/ch4.html), the _this_ keyword is considered the #1 gotcha in V8 and JavaScript.  Therefore, in a class constructor and its class methods, we always use a _self_ variable to refer to the class object instance.  In other words, the _self_ unambiguously refers to the class instance.
 
 A static method can accept an _instance_ parameter in order to work on a specific class object instance.
 
